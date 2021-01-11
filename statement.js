@@ -11,15 +11,13 @@ function statement(invoice, plays) {
             minimumFractionDigits: 2,
         }).format;
     for (const perf of invoice.performances) {
-        let thisAmount = aMountFor(perf);
-
         // ボリューム特典のポイントを加算
         volumeCredits += Math.max(perf.audience - 30, 0);
         // 喜劇の時は10人につき,さらにポイント加算
         if ("comedy" === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
         // 注文の内訳を出力
-        result += ` ${playFor(perf).name}: ${format(thisAmount / 100)} (${perf.audience} seats) \n`;
-        totalAmount += thisAmount;
+        result += ` ${playFor(perf).name}: ${format(aMountFor(perf) / 100)} (${perf.audience} seats) \n`;
+        totalAmount += aMountFor(perf);
         result += `Amount owed is ${format(totalAmount / 100)}`;
         result += `You earned ${volumeCredits} credits \n`;
         return result;
