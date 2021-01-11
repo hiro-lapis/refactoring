@@ -11,7 +11,8 @@ function statement(invoice, plays) {
             minimumFractionDigits: 2,
         }).format;
     for (const perf of invoice.performances) {
-        const play = plays[perf.playID];
+        const play = playFor(perf);
+        // const play = plays[perf.playID];
         let thisAmount = aMountFor(perf, play);
 
         // ボリューム特典のポイントを加算
@@ -25,28 +26,36 @@ function statement(invoice, plays) {
         result += `You earned ${volumeCredits} credits \n`;
         return result;
     }
+
+      /**
+       * playe内にplayIDに応じた値を返却
+       * @param {*} aPerformance
+       */
+    function playFor(aPerformance) {
+        return plays[aPerformance.playID];
+    }
 }
 
-function aMountFor(perf, play) {
-    let thisAmount = 0;
+function aMountFor(aPerformance, play) {
+    let result = 0;
         switch (play.type) {
             case "tragedy":
-                thisAmount = 40000;
-                if (perf.audience > 30) {
-                    thisAmount += 1000 * (perf.audience - 30);
+                result = 40000;
+                if (aPerformance.audience > 30) {
+                    result += 1000 * (aPerformance.audience - 30);
                 }
                 break;
             case "comedy":
-                thisAmount = 30000;
-                if (perf.audience > 20) {
-                    thisAmount += 1000 + 50 * (perf.audience - 20);
+                result = 30000;
+                if (aPerformance.audience > 20) {
+                    result += 1000 + 50 * (aPerformance.audience - 20);
                 }
-                thisAmount += 300 * perf.audience;
+                result += 300 * aPerformance.audience;
                 break;
             default:
                 throw new Error(`unknown type: ${play.type}`);
         }
-    return thisAmount;
+    return result;
 }
 
 module.exports = statement;
