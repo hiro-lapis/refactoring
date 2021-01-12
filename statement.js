@@ -2,13 +2,6 @@ function statement(invoice, plays) {
     let totalAmount = 0;
     let volumeCredits = 0;
     let result = `Statement for ${invoice.customer}\n`;
-
-    const format = new Intl.NumberFormat("en-US",
-        {
-            style: "currency",
-            currency: "USD",
-            minimumFractionDigits: 2,
-        }).format;
     for (let perf of invoice.performances) {
 
         volumeCredits += volumeCreditsFor(perf);
@@ -18,6 +11,19 @@ function statement(invoice, plays) {
         result += `Amount owed is ${format(totalAmount / 100)}`;
         result += `You earned ${volumeCredits} credits \n`;
         return result;
+    }
+
+    /**
+     * 数値をUSD(小数点2位まで)にフォーマット
+     * @param {*} aNumber
+     */
+    function format(aNumber) {
+    return new Intl.NumberFormat("en-US",
+    {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+    }).format(aNumber);
     }
 
     /**
